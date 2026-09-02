@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2026-01-01",
+    "image": "images/sermon-1.jpg",
+    "church": "Canyon Creek Baptist Church",
+    "location": "Temple, TX",
+    "title": "Does Christianity Work?",
+    "scripture": "II Timothy 4:16–18",
+    "description": "Does Christianity actually work when life falls apart? In II Timothy, Dr. Marrow walks through the apostle Paul's own story — abandoned, on trial, facing the end alone — and shows how the Lord stood with him through it all. It's a message about the same help Paul found still being available to us today.",
+    "videoUrl": "https://www.youtube.com/live/naj0vXbKj10?si=CkAqdBIcMf2AcUu1"
+  },
+  {
+    "date": "2025-12-01",
+    "image": "images/sermon-2.jpg",
+    "church": "First Baptist Church",
+    "location": "Hearne, TX",
+    "title": "God Is Always Right",
+    "scripture": "Romans 1:15–17",
+    "description": "Can God really be trusted, no matter what? In Romans, Dr. Marrow unpacks the righteousness of God — not just who He is, but what He's done for us in Jesus Christ. That truth changes how we see our own failures, our sin, and our need for grace. It's a clear, bold case for why God is always worth following.",
+    "videoUrl": "https://www.facebook.com/share/v/19DY41BPeQ/"
+  },
+  {
+    "date": "2025-11-01",
+    "image": "images/sermon-3.jpg",
+    "church": "DRAFT: Church pending",
+    "location": "Location pending",
+    "title": "DRAFT: Sermon title pending",
+    "scripture": "",
+    "description": "DRAFT COPY — placeholder description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "videoUrl": ""
+  }
+]
