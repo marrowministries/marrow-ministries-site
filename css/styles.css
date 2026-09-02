@@ -1,0 +1,1789 @@
+/* ==========================================================================
+   Marrow Ministries — Stylesheet
+   Design tokens pulled from client-approved creative mockup
+   ========================================================================== */
+
+:root {
+  /* Color palette — exact hex values extracted from client PSD */
+  --color-white: #ffffff;
+  --color-gold: #ccb77a;           /* Mission / Bio / Prayer / Contact backgrounds */
+  --color-gold-dark: #b39f66;      /* hover state, derived */
+  --color-taupe-dark: #9c948a;     /* Scripture quote banner background */
+  --color-taupe-light: #bab4ad;    /* Resources section background */
+  --color-brown: #726659;          /* Nav text, headings, logo (named "BRAND COLOR" in PSD) */
+  --color-brown-dark: #574d42;     /* derived darker shade for headings/hover */
+  --color-text: #3a3530;
+  --color-text-muted: #6b6560;
+  --color-text-on-dark: #f5f2ec;
+  --color-link: #3b7db4;
+  --color-border: #e6e0d6;
+
+  /* Typography */
+  --font-display: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Spacing scale */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+
+  /* Layout */
+  --max-width: 1300px; /* matches PSD canvas width exactly — all measurements map 1:1 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+/* ==========================================================================
+   Reset & Base
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-cream);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   PDF-style whole-page scaling
+   The entire page is built fixed-width at 1300px (the PSD's exact design
+   width). Rather than individual elements reflowing/resizing independently
+   at different rates (which caused drift between elements), the whole
+   #scale-inner block scales as a single rigid unit via JS-driven
+   transform: scale() — exactly like zooming a PDF page. Every element's
+   position and size relative to every other element is mathematically
+   guaranteed to stay identical at any zoom level. #scale-outer's height is
+   kept in sync via JS so the page's scrollbar matches the visual result.
+   Below 768px, JS disables this and the mobile-specific CSS takes over.
+   ========================================================================== */
+
+#scale-outer {
+  position: relative;
+  overflow-x: hidden;
+}
+
+#scale-inner {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1300px;
+  transform-origin: top center;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Visible keyboard focus for accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--color-brown);
+  outline-offset: 2px;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-brown-dark);
+}
+
+.container {
+  width: 1300px; /* fixed — matches PSD design width exactly, does not scale.
+    All sections use this same fixed width for full consistency across the page. */
+  margin: 0 auto;
+  padding: 0 120px; /* exact PSD side margins, matching header/hero */
+  box-sizing: border-box;
+}
+
+.bio .container {
+  padding: 0 200px; /* increased further per client request, to squeeze the
+    copy into a narrower column than the standard page margins */
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-brown-dark);
+  color: var(--color-white);
+  padding: var(--space-sm) var(--space-md);
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  left: var(--space-sm);
+  top: var(--space-sm);
+}
+
+/* ==========================================================================
+   Buttons & Links
+   ========================================================================== */
+
+.btn {
+  display: inline-flex; /* was inline-block — switched so text can be reliably
+    vertically centered within the new fixed height */
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem; /* explicit, guaranteed height per client request — no longer
+    dependent on padding+line-height math, which can vary slightly by browser */
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0 2em; /* vertical padding removed — height is now fixed and text is
+    centered via flex; horizontal padding retained */
+  border-radius: 0; /* square corners, no rounding, per client request */
+  border: 1px solid var(--color-brown-dark); /* reduced 50% from 2px, per client request */
+  color: var(--color-brown-dark);
+  background: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: var(--color-brown-dark);
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.sermons .btn {
+  border-color: var(--color-taupe-light); /* matches the Resources section's
+    background color exactly, per client request — scoped to Sermons only */
+  color: var(--color-taupe-light);
+}
+
+.sermons .btn:hover {
+  background-color: var(--color-taupe-light); /* matches the Resources section's
+    background color exactly, per client request — scoped to Sermons only,
+    Resources' own button keeps the standard hover color */
+  color: var(--color-white); /* per client request — was taupe-on-taupe (low
+    contrast), now switches to white on hover for visibility */
+}
+
+.btn-solid {
+  background-color: var(--color-brown-dark);
+  color: var(--color-white);
+}
+
+.btn-solid:hover {
+  background-color: var(--color-brown);
+  color: var(--color-white);
+}
+
+.link-underline {
+  color: var(--color-link);
+  font-size: 1rem; /* explicit — restores the smaller-than-body-copy size it had
+    before, when it inherited a smaller default from sitting outside the paragraph */
+  font-weight: 600;
+  display: inline-block; /* wraps as one atomic unit to its own line if it doesn't
+    fit, rather than breaking mid-phrase across two lines, per client request */
+  white-space: nowrap;
+}
+
+.link-underline::after {
+  content: " >>"; /* per client request — underline removed, color alone now
+    communicates the link, arrow reinforces it */
+}
+
+/* ==========================================================================
+   Header / Navigation
+   ========================================================================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-inner {
+  width: 1300px; /* fixed — matches PSD design width exactly, does not scale */
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start; /* precise top-alignment — replaces "center" so nav text
+    can be positioned to align its visual bottom with the logo icon's building
+    shape, not just centered generically within the row */
+  justify-content: center;
+  column-gap: 100px; /* exact PSD gap flanking the logo, both sides — fixed, no scaling */
+  padding: 29.5px 120px; /* exact PSD side margins; top/bottom recalculated so total
+    header height is exactly 180px (2.5in at 72dpi), matching the scripture section depth */
+}
+
+.primary-nav {
+  flex-shrink: 0;
+}
+
+.nav-list {
+  display: flex;
+  justify-content: space-between; /* self-distributing — matches PSD's flush-outer,
+                                      equal-inner-gap pattern regardless of rendered text width */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 47.45px; /* calculated so nav text's visual bottom (baseline — no
+    descenders in any nav word) aligns with the bottom of the white building/M
+    shape inside the logo's circle (not the full circle), per PSD verification:
+    building shape bottom sits at content-box y=61px, Montserrat Bold's ascent
+    metric places baseline ~13.55px into a line-height:1 box, so top offset =
+    61 - 13.55 = 47.45px. Reverted back to this calculated baseline. */
+  flex-shrink: 0;
+}
+
+.nav-list-left {
+  width: 384px; /* exact PSD span: HOME start to ABOUT TIM end — fixed, no scaling */
+}
+
+.nav-list-right {
+  width: 386px; /* exact PSD span: SERMONS start to CONTACT end — fixed, no scaling */
+}
+
+.primary-nav a {
+  font-size: 14px; /* exact PSD size — fixed, no scaling */
+  font-weight: 700; /* Montserrat Bold, per PSD font embed */
+  letter-spacing: 0.05em; /* exact PSD tracking: 50/1000em */
+  text-transform: uppercase;
+  color: var(--color-brown);
+  white-space: nowrap;
+  line-height: 1; /* was inheriting body's 1.65 — that inflated line-box made
+    precise vertical alignment against the logo unpredictable */
+}
+
+.primary-nav a:hover,
+.primary-nav a:focus-visible {
+  color: var(--color-brown-dark);
+  text-decoration: none;
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  color: var(--color-brown);
+  flex-shrink: 0;
+}
+
+.logo img {
+  width: 90px; /* exact PSD size — fixed, no scaling */
+  height: 121px; /* explicit, not auto — locks to the true PSD raster ratio (90:121)
+    rather than the SVG's own slightly different native ratio */
+  flex-shrink: 0;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-xs);
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hamburger span {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background-color: var(--color-brown-dark);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-border);
+}
+
+.mobile-nav a {
+  display: block;
+  padding: var(--space-sm) var(--space-lg);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-brown);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-nav.is-open {
+  display: flex;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  width: 1300px; /* fixed — matches PSD design width exactly, does not scale */
+  height: 621px; /* fixed — exact PSD hero height, recalculated after header
+    correction (scripture section starts at PSD y=801; 801 - 180 header = 621) */
+  overflow: hidden;
+  background-color: var(--color-brown-dark);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-tagline {
+  position: absolute;
+  top: 21px; /* reduced 30% from exact PSD position (30px) per client request */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  color: var(--color-white);
+  font-size: 19.37px; /* PSD size (11.82px) increased 40%, then 30%, then reduced 10% per client request — fixed, no scaling */
+  font-weight: 600; /* Montserrat SemiBold, per client request */
+  letter-spacing: 0.05em; /* PSD tracking: 50/1000 em */
+  text-transform: uppercase;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.hero-title {
+  position: absolute;
+  bottom: 0; /* sits flush on the bottom edge of the hero image */
+  left: 50%;
+  transform: translateX(-50%) translateY(30.7px); /* fixed px — corrects for Montserrat's
+    reserved descender space (25.1% of font-size) minus the 1.25rem client-tuned nudge,
+    computed once at the fixed 202px font-size rather than a live formula */
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 120px; /* matches header's exact PSD side margins — fixed, no scaling */
+  text-align: center;
+  font-size: 202px; /* exact PSD rendered size — fixed, no scaling */
+  font-weight: 800; /* Montserrat ExtraBold, per PSD */
+  color: var(--color-white);
+  opacity: 0.3; /* exact PSD layer opacity: 30% */
+  letter-spacing: -0.05em; /* PSD tracking: -50/1000 em */
+  word-spacing: -0.0723em; /* reduces the "Acts"-to-"20:24" word gap by 30%, calculated from
+    Montserrat ExtraBold's actual space-glyph width (0.291em) — letter-spacing alone affects
+    inter-letter tracking uniformly and doesn't independently target the wider word gap */
+  margin: 0;
+  line-height: 1;
+}
+
+/* Manual per-character kerning overrides for "Acts 20:24" — letter-spacing applies
+   uniformly to every pair, so these target only the specific gaps flagged as
+   too tight or too loose, layered on top of the base -0.05em tracking above.
+   Values are a first pass — expect iteration once seen in the browser. */
+.ks-loosen {
+  margin-right: 0.04em; /* loosens "c-t" and "t-s" within "Acts" — base -0.05em
+    was causing overlap; this nets to about -0.01em so the letters just barely touch */
+}
+
+.ks-loosen-colon {
+  margin-right: 0.025em; /* increases the ":"-to-"2" gap by 50% over base tracking
+    (nets to about -0.025em, half as tight as the default -0.05em) */
+}
+
+.ks-double-0-colon {
+  margin-right: 0.0111em; /* doubles the "0"-to-":" gap — measured from actual Montserrat
+    ExtraBold glyph geometry: natural gap (letter-spacing:0) is 0.0611em, base -0.05em
+    tracking brings it to 0.0111em (~2.24px at 1300px+), this adds enough to reach
+    0.0222em (~4.49px), exactly double */
+}
+
+/* ==========================================================================
+   Quote Banner
+   ========================================================================== */
+
+.quote-banner {
+  background-color: var(--color-taupe-dark);
+  color: var(--color-white);
+  text-align: center;
+  width: 1300px; /* fixed — matches PSD design width exactly, does not scale */
+  height: 180px; /* fixed — matches header height exactly (2.5in at 72dpi), per client request */
+  margin: 0 auto;
+  padding: 0 120px; /* side margins only; vertical space is now managed by flex centering below */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* content is centered within the fixed 180px height —
+    next step is fitting the quote/signoff text to sit well within this space */
+  overflow: hidden; /* prevents content from visually breaking out of the fixed height
+    if it doesn't yet fit — flag if you see anything clipped so we can resize the text */
+}
+
+.quote-banner blockquote {
+  margin: 0 auto;
+  margin-bottom: 6px; /* tightened significantly so the signoff sits snug under the
+    last line of the quote, rather than a full line-space away — adjust further if needed */
+  max-width: none; /* text flows to the page's left/right padding, not a narrower column */
+  font-family: var(--font-display);
+  font-style: italic; /* Montserrat Regular Italic, per PSD */
+  font-weight: 400;
+  font-size: 24.38px; /* exact PSD size — fixed, no scaling */
+  line-height: 1.2; /* PSD: auto leading (Photoshop's auto = 120% of font-size) */
+}
+
+.quote-banner blockquote p {
+  margin: 0; /* eliminates the browser's default paragraph margin (~24px), which
+    would otherwise sit between the quote and signoff on top of the margin-bottom
+    set above */
+}
+
+.quote-banner cite {
+  display: block;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-weight: 600; /* Montserrat SemiBold, per PSD */
+  font-size: 15.23px; /* exact PSD size — fixed, no scaling */
+  color: #000000; /* per PSD: black */
+  letter-spacing: normal;
+}
+
+/* ==========================================================================
+   Photo Strip
+   ========================================================================== */
+
+.photo-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* fr units mathematically guarantee zero
+    gap between cells — no rounding math or overlap hacks needed, unlike the
+    flexbox + negative-margin approach this replaces, which wasn't reliable */
+  width: 1300px; /* matches every other section's width exactly — this was the
+    real cause of the white strip at the far left/right: the previous version
+    was 1291px, centered, leaving a 4.5px gap on each side */
+  height: 216px; /* explicit height on the container itself — this was missing
+    after switching from flexbox to grid, leaving row height to implicit
+    auto-sizing rather than a hard constraint */
+  gap: 0;
+  margin: 0 auto;
+  font-size: 0;
+  line-height: 0;
+}
+
+.photo-strip img {
+  width: 100%; /* fills its grid cell exactly (~216.7px) — the ~0.3% difference
+    from a perfect 216px square is not visually perceptible */
+  height: 216px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==========================================================================
+   Mission Section
+   ========================================================================== */
+
+.mission {
+  background-color: var(--color-gold);
+  color: var(--color-brown-dark);
+  text-align: center;
+  width: 1300px; /* fixed — matches every other section exactly, no scaling */
+  margin: 0 auto;
+  padding: 51.29px 120px 60px; /* both edges corrected to measure to the true
+    VISIBLE text boundary, not the invisible line-box edge. Top: Montserrat's
+    ascent sits ~8.71px above cap-height even at line-height:1. Bottom: the
+    explicit 34px leading exceeds the emphasis text's natural font metrics
+    (26.82px at 22px font-size) by 7.18px, half of which (3.59px) sits below
+    the visible descender before reaching the box edge. Both now measure a
+    true, consistent 60px to the actual visible text in each direction. */
+  box-sizing: border-box;
+}
+
+.mission h2 {
+  color: var(--color-white);
+  font-size: 32.5px; /* exact PSD: 32.5pt at 72dpi */
+  font-weight: 500; /* Montserrat Medium, per PSD */
+  line-height: 1; /* was inheriting the page's 1.65 default, which added roughly
+    10-11px of invisible space above the visible "M" on top of the 60px padding —
+    this is very likely why top and bottom looked asymmetric despite equal
+    padding values; the paragraph below already had a tight explicit line-height */
+  margin-bottom: 20.18px; /* visually corrected: raw PSD gap is 32px, recalculated
+    against the corrected 19pt/34.53pt body copy specs. Accounts for h2's ~1px
+    invisible space below its own baseline (line-height:1) and the body
+    paragraph's ~10.8px invisible space above its own cap-height */
+}
+
+.mission p {
+  color: #000000; /* exact PSD: black — was inheriting the section's brown-dark default */
+  max-width: none; /* was capped at 800px — now spans the full standardized
+    120px margins, matching every other section's text width */
+  margin: 0 auto 19.09px; /* visually corrected against the updated 19pt/34.53pt
+    specs — original PSD design has both paragraphs in one continuous text block
+    sharing the same leading, with a blank line between them, so the intended
+    visible gap is one full 34.53px leading. Accounts for this paragraph's ~5.7px
+    invisible space below its descender and the emphasis paragraph's ~9.75px
+    invisible space above its cap-height */
+  font-size: 20px; /* backed off from 21px to test readability at Regular weight, per client request */
+  font-weight: 400; /* testing Montserrat Regular for comparison against Medium,
+    per client request — PSD's Character panel does say "Regular" for this text */
+  line-height: 34.53px; /* corrected exact PSD leading: 34.53pt at 72dpi —
+    same value used for both this paragraph and the emphasis line below,
+    regardless of their different font sizes */
+}
+
+.mission p.emphasis {
+  color: var(--color-white); /* exact PSD: white */
+  font-size: 22px; /* exact PSD: 22pt Montserrat Medium */
+  font-weight: 500; /* Montserrat Medium */
+  line-height: 34.53px; /* corrected exact PSD leading: 34.53pt at 72dpi, same as the paragraph above */
+}
+
+.mission p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Areas of Service
+   ========================================================================== */
+
+.services {
+  position: relative;
+  padding: 51.29px 0 70px; /* top corrected for the headline cap-height offset
+    (all section headings share Mission's 32.5px Medium/line-height:1 typography);
+    bottom set to a direct 65px per client request — intentionally breaking from
+    the font-metric-corrected 60px-visible standard used elsewhere, for this
+    section only */
+  text-align: center;
+  overflow: hidden;
+}
+
+.bio::before {
+  content: "";
+  position: absolute;
+  right: -39px; /* exact PSD: logo bleeds 39px past the canvas's right edge */
+  top: -452px; /* pushes the graphic upward into the preceding Areas of Service
+    section by 452px — exact PSD proportion (74% of the logo's 612px height
+    sits above the section boundary, 26% below it) */
+  width: 613px; /* exact PSD size — was 420px, noticeably smaller than intended */
+  height: 612px;
+  background-image: url("../images/watermark-logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.services .container {
+  position: relative;
+  z-index: 1;
+}
+
+.services h2 {
+  color: var(--color-brown); /* confirmed exact PSD fill (#726659) — was inheriting
+    the wrong dark brown from the global heading reset */
+  font-size: 32.5px; /* confirmed via consistent PSD engine data across all section
+    headings — same 32.5pt Montserrat Medium spec as Mission's verified heading */
+  font-weight: 500; /* Montserrat Medium — was inheriting global h1-h4 default of 600 */
+  margin-bottom: 17.52px; /* font-metric corrected: exact PSD gap is 29px, minus
+    h2's ~1.04px invisible space below baseline and the body copy's ~10.44px
+    invisible space above its cap-height */
+  line-height: 1; /* matches Mission section fix — removes inherited 1.65
+    line-height which added invisible space above the visible cap-height */
+}
+
+.services-intro {
+  max-width: none; /* now spans the full standardized 120px margins, per client request */
+  margin: 0 auto 33.92px; /* font-metric corrected: exact PSD gap to the first
+    service item is 39px, minus this paragraph's own ~5.08px invisible trailing
+    space (line-height exceeds natural font metrics). The first service item's
+    visual top is dominated by its 140px image, which has no invisible
+    font-metric offset of its own, so no second-side correction is needed —
+    same methodology as the Mission section's copy-to-emphasis gap */
+  color: #000000; /* solid black — was still on the old muted gray from before the
+    site-wide black pass, which made it visually read as a lighter weight even
+    though font-weight:400 was already correct */
+  font-size: 20px; /* standardized site-wide body copy spec, confirmed with Mission */
+  font-weight: 400; /* Montserrat Regular, confirmed standard for all body copy */
+  line-height: 34.53px; /* matches Mission's exact leading */
+}
+
+.service-list {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem; /* additional indent for just this list, beyond the page's
+    standard margins, per client request */
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* reduced 50% from 40px per client request — also shortens the
+    section overall (saves 100px total across the 5 gaps between 6 items) */
+}
+
+.service-item {
+  display: grid;
+  grid-template-columns: 165px 1fr;
+  gap: 2rem; /* increased 0.5rem from the standard --space-md (1.5rem), per client request */
+  align-items: flex-start; /* was center — now top-aligns image and text so the
+    headline's cap-height can be precisely matched to the image's top edge */
+}
+
+.service-item img {
+  width: 165px; /* increased from 140px to match the actual PSD image box size, per client request */
+  height: 165px;
+  object-fit: cover;
+  border-radius: 0; /* square corners, no rounding, per client request */
+}
+
+.service-item h3 {
+  font-size: 1.15rem;
+  color: var(--color-brown); /* already exactly #726659 — the confirmed PSD logo/brand color */
+  line-height: 1; /* tightened to minimize invisible line-box space above the cap-height */
+  margin-top: -2.93px; /* font-metric correction: pulls the headline's visible
+    cap-height flush with the image's top edge — without this, Montserrat's
+    ascent metric (which reserves room for accents) leaves ~4.93px of invisible
+    space above the cap-height even at line-height:1, same issue found in the
+    Mission section headline */
+  margin-bottom: 6px; /* headline-to-copy gap reduced 25% from 8px, per client request */
+}
+
+.service-item p {
+  margin: 0;
+  color: #000000; /* solid black, per client request for all body copy */
+  font-size: 20px; /* standardized site-wide body copy spec, confirmed with Mission */
+  font-weight: 400; /* Montserrat Regular, confirmed standard for all body copy */
+  line-height: 34.53px; /* matches Mission's exact leading */
+}
+
+/* ==========================================================================
+   Bio Section
+   ========================================================================== */
+
+.bio {
+  position: relative; /* needed so the straddling watermark below (::before, with
+    a negative top offset) can extend upward into the preceding Areas of Service
+    section correctly */
+  background-color: var(--color-gold);
+  color: var(--color-brown-dark);
+  text-align: center;
+  padding: 75px 0 98.86px; /* top increased to 75px per client request — Bio starts
+    with the circular photo, not text, so no font-metric offset applies there. Bottom is the
+    font-metric-corrected 54.92px increased 80% per client request, breaking
+    from the site-wide standard intentionally for this section */
+}
+
+.bio-photo {
+  width: 199px; /* corrected to exact PSD size — was 180px, smaller than intended */
+  height: 199px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 28.41px; /* increased 40% from the font-metric-corrected 20.29px,
+    per client request */
+}
+
+.bio h2 {
+  color: var(--color-white);
+  font-size: 32.5px; /* confirmed via consistent PSD engine data across all section
+    headings — same 32.5pt Montserrat Medium spec as Mission's verified heading */
+  font-weight: 500; /* Montserrat Medium — was inheriting global h1-h4 default of 600 */
+  margin-bottom: 17.52px; /* font-metric corrected — same calculation as Areas of
+    Service's headline-to-body gap, per client request to match that spacing */
+  line-height: 1; /* matches Mission section fix — removes inherited 1.65
+    line-height which added invisible space above the visible cap-height */
+}
+
+.bio-intro {
+  color: #000000; /* solid black, per client request for all body copy */
+  max-width: none; /* now spans the full standardized 120px margins, per client request */
+  margin: 0 auto 18.56px; /* font-metric corrected — same calculation as the
+    copy-to-subhead gap below, per client request */
+  font-size: 20px; /* updated to match Mission's finalized 20px Regular spec */
+  font-weight: 400; /* Montserrat Regular — matching Mission's finalized weight, per client request */
+  line-height: 34.53px; /* matches Mission's exact leading */
+}
+
+.bio-subhead {
+  font-family: var(--font-body);
+  font-weight: 500; /* Montserrat Medium, per client request */
+  font-size: 20px; /* matches body copy size, per client request */
+  letter-spacing: 0.005em; /* closed from 0.12em to ~5 tracking, per client request */
+  color: var(--color-white); /* already correct */
+  line-height: 1; /* tight, for precise font-metric-corrected spacing below */
+  margin-bottom: var(--space-sm);
+  margin-top: 0; /* gap is now controlled entirely by the preceding element's
+    margin-bottom, to avoid ambiguous margin-collapsing between siblings */
+}
+
+.bio-block {
+  max-width: none; /* now spans the full standardized 120px margins, per client request */
+  margin: 0 auto;
+}
+
+.bio-block p {
+  color: #000000; /* solid black, per client request for all body copy */
+  margin: 0 0 4px; /* reduced 75% from var(--space-sm)=16px — this is the space
+    above each bullet, since every non-last paragraph is immediately followed
+    by one, per client request */
+  font-size: 20px; /* updated to match Mission's finalized 20px Regular spec */
+  font-weight: 400; /* Montserrat Regular — matching Mission's finalized weight, per client request */
+  line-height: 34.53px; /* matches Mission's exact leading */
+}
+
+.bio-block p.bio-bullet {
+  color: var(--color-white); /* per PSD: white bullets — needs this higher-specificity
+    selector to correctly override .bio-block p's black color rule */
+  text-align: center; /* centers horizontally, matching PSD */
+  font-size: 20px; /* matches surrounding body copy */
+  line-height: 8.63px; /* reduced 75% from 34.53px — the full body-copy leading
+    was excessive for a single standalone bullet character, per client request */
+  margin: 0 0 4px; /* reduced 75% from var(--space-sm)=16px, per client request */
+}
+
+.bio-block p:last-child {
+  margin-bottom: 18.56px; /* font-metric corrected gap before the NEXT subhead —
+    same calculation as bio-intro's gap to the first subhead, per client request */
+}
+
+.bio-block:last-of-type p:last-child {
+  margin-bottom: 0; /* the very last block has no following subhead — this lets
+    the section's own standardized bottom padding be the only trailing space,
+    now that the link list below has been removed entirely */
+}
+
+/* ==========================================================================
+   Sermons Section
+   ========================================================================== */
+
+.sermons {
+  padding: 51.29px 0 60px; /* standardized site-wide vertical rhythm — top corrected
+    for the same headline cap-height offset found in Mission (all section headings
+    share the same 32.5px Medium/line-height:1 typography); bottom set to flat 60px
+    pending individual font-metric verification of each section's specific ending element */
+  text-align: center;
+}
+
+.sermons h1,
+.sermons h2 {
+  color: var(--color-brown); /* confirmed exact PSD fill (#726659) — was inheriting
+    the wrong dark brown from the global heading reset */
+  font-size: 32.5px; /* confirmed via consistent PSD engine data across all section
+    headings — same 32.5pt Montserrat Medium spec as Mission's verified heading */
+  font-weight: 500; /* Montserrat Medium — was inheriting global h1-h4 default of 600 */
+  margin-bottom: var(--space-md);
+  line-height: 1; /* matches Mission section fix — removes inherited 1.65
+    line-height which added invisible space above the visible cap-height */
+}
+
+.sermons-intro {
+  max-width: none; /* now spans the full standardized 120px margins, per client request */
+  margin: 0 auto 44.8px; /* matched to the exact gap between sermon items
+    (.sermon-list gap), per client request for consistency */
+  color: #000000; /* solid black, per client request for all body copy */
+  text-align: center; /* was left — now centered, matching every other section's intro copy */
+  font-size: 20px; /* corrected to match Mission's finalized spec (was still on old 19px) */
+  font-weight: 400; /* Montserrat Regular, matching Mission's finalized weight (was Medium) */
+  line-height: 34.53px; /* exact PSD leading, matching Mission */
+}
+
+.sermon-list {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 44.8px; /* reduced 30% from var(--space-xl)=64px, per client request */
+}
+
+.sermon-item {
+  display: grid;
+  grid-template-columns: 165px 1fr;
+  gap: 2rem; /* matched to Areas of Service/Resources' exact image-to-copy gutter, per client request */
+  text-align: left;
+  align-items: start;
+}
+
+.sermon-item img {
+  width: 165px; /* fixed, matches Areas of Service/Resources exactly, per client request */
+  height: 165px;
+  object-fit: cover; /* crops the 480x270 source proportionally into a square,
+    same approach used for the photo bar and Areas of Service images */
+  margin-top: 3.43px; /* font-metric correction: aligns the image's top edge with
+    the eyebrow header's actual visible cap-height, same methodology used
+    throughout the site */
+  border-radius: 0; /* square corners, no rounding, per client request */
+}
+
+.sermon-item h3 {
+  font-size: 20px; /* matched to the body copy size, per client request —
+    was 1.15rem (18.4px) */
+  font-weight: 500; /* Montserrat Medium — matched to the section headline's
+    weight, per client request (was Bold/700) */
+  color: var(--color-brown);
+  margin-bottom: 4.8px; /* reduced 40% from var(--space-xs)=8px, per client
+    request — applies to every sermon listing since this is a shared class */
+}
+
+.sermon-item .sermon-scripture {
+  font-size: 1.105rem; /* increased 30% from 0.85rem as a first-pass proposal —
+    let me know if you want it larger or smaller */
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin-bottom: 9.6px; /* reduced 40% from var(--space-sm)=16px, per client
+    request — applies to every sermon listing since this is a shared class */
+}
+
+.sermon-item .sermon-meta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  line-height: 1; /* tightened for precise font-metric-corrected alignment
+    with the image beside it, same pattern used throughout the site */
+  margin-bottom: 9.6px; /* reduced 40% from var(--space-sm)=16px, per client
+    request — applies to every sermon listing since this is a shared class */
+}
+
+.sermon-item p {
+  color: #000000; /* solid black, per client request for all body copy */
+  margin: 0; /* removed the leftover var(--space-sm) bottom margin — it was
+    originally spacing this paragraph from the separate "Watch the Sermon Now"
+    link, which is now merged inside it and no longer needs that gap */
+  font-size: 20px; /* was missing entirely — now matches Mission's finalized spec */
+  font-weight: 400; /* was missing entirely — Montserrat Regular */
+  line-height: 34.53px; /* was missing entirely — exact PSD leading, matching Mission */
+}
+
+.section-cta {
+  margin-top: 44.8px; /* reduced 30% from var(--space-xl)=64px, per client
+    request — applies to both the Sermons and Resources "View All" buttons,
+    since they share this class */
+}
+
+/* ==========================================================================
+   Resources Section
+   ========================================================================== */
+
+.resources {
+  background-color: var(--color-taupe-light);
+  color: var(--color-white);
+  padding: 51.29px 0 60px; /* standardized site-wide vertical rhythm — top corrected
+    for the same headline cap-height offset found in Mission (all section headings
+    share the same 32.5px Medium/line-height:1 typography); bottom set to flat 60px
+    pending individual font-metric verification of each section's specific ending element */
+  text-align: center;
+}
+
+.resources h1,
+.resources h2 {
+  color: var(--color-white);
+  font-size: 32.5px; /* confirmed via consistent PSD engine data across all section
+    headings — same 32.5pt Montserrat Medium spec as Mission's verified heading */
+  font-weight: 500; /* Montserrat Medium — was inheriting global h1-h4 default of 600 */
+  margin-bottom: 32px; /* direct client-specified value */
+  line-height: 1; /* matches Mission section fix — removes inherited 1.65
+    line-height which added invisible space above the visible cap-height */
+}
+
+.resource-list {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28.8px; /* reduced 70% from var(--space-2xl)=96px, per client request */
+}
+
+.resource-item img.resource-item-square {
+  width: 165px; /* fixed, exact match to Areas of Service's image size — was
+    inheriting width:100%, which stretched it to fill the 180px grid column */
+  border-radius: 0; /* square corners, overriding the book cover's rounded-corner
+    styling for this specific placeholder — higher specificity than the general
+    .resource-item img rule, no !important needed */
+}
+
+.resource-item img.resource-item-book {
+  width: 165px; /* fixed, matches the Marrow Minute placeholder's width — was
+    inheriting width:100%, which stretched it to fill the 180px grid column.
+    Height stays proportional (264px at this width), preserving the cover's
+    true aspect ratio */
+}
+
+.resource-item {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 2rem; /* matched to Areas of Service's exact image-to-copy gutter, per client request */
+  text-align: left;
+  align-items: start;
+}
+
+.resource-item img {
+  width: 100%;
+  height: auto; /* explicit, not relying on implicit default — ensures the image's
+    natural vertical (portrait) proportions are always preserved rather than
+    being forced into any container-driven height */
+  margin-top: 6.9px; /* recalculated for the heading's new 28px line-height */
+  border-radius: var(--radius-sm);
+}
+
+.resource-item h3 {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--color-white);
+  font-size: 1.3rem;
+  line-height: 28px; /* direct client-specified value, per feedback that 20.72px
+    was too tight for the two-line heading */
+  margin-bottom: var(--space-xs);
+}
+
+.resource-item .resource-author {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem; /* per client request */
+  opacity: 0.9;
+}
+
+.resource-item p {
+  margin: 0;
+  opacity: 1;
+  color: #000000; /* solid black, per client request for all body copy —
+    was inheriting the section's white default, set for the taupe background */
+  font-size: 19px; /* confirmed exact PSD match with Mission's body copy */
+  font-weight: 400; /* Montserrat Regular — was still Medium (500), a leftover
+    from before Mission's own body copy was changed to Regular; never updated
+    to follow, per client request */
+  line-height: 34.53px; /* exact PSD leading, matching Mission */
+}
+
+.resources .btn {
+  border-color: var(--color-white);
+  color: var(--color-white);
+}
+
+.resources .btn:hover {
+  background-color: var(--color-white);
+  color: var(--color-brown-dark);
+}
+
+/* ==========================================================================
+   Prayer Section
+   ========================================================================== */
+
+.prayer {
+  position: relative; /* needed so the straddling watermark below (::after, with
+    a bottom offset extending past this section's own box) can render into the
+    following Contact section without being clipped by Contact's own overflow:hidden */
+  background-color: var(--color-white); /* corrected from gold — confirmed pure
+    white via direct PSD pixel sampling */
+  color: var(--color-brown-dark);
+  text-align: center;
+  padding: 51.29px 0 60px; /* standardized site-wide vertical rhythm — top corrected
+    for the same headline cap-height offset found in Mission (all section headings
+    share the same 32.5px Medium/line-height:1 typography); bottom set to flat 60px
+    pending individual font-metric verification of each section's specific ending element */
+}
+
+.prayer::after {
+  content: "";
+  position: absolute;
+  left: 8px; /* exact PSD position — sits just inside the left edge, no bleed */
+  bottom: -520px; /* extends downward past this section's own box into the
+    following Contact section — exact PSD proportion (85% of the logo's 612px
+    height sits within Contact, 15% above it, within Prayer's own space) */
+  width: 613px; /* exact PSD size */
+  height: 612px;
+  background-image: url("../images/watermark-logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.prayer h2 {
+  color: var(--color-brown); /* corrected from white — confirmed exact PSD fill
+    is #726659, and the section's background just changed from gold to white,
+    which would have made white text invisible */
+  font-size: 32.5px; /* confirmed via consistent PSD engine data across all section
+    headings — same 32.5pt Montserrat Medium spec as Mission's verified heading */
+  font-weight: 500; /* Montserrat Medium — was inheriting global h1-h4 default of 600 */
+  margin-bottom: 17.52px; /* font-metric corrected — same calculation as Areas of
+    Service and Mission's headline-to-body gap, per client request */
+  line-height: 1; /* matches Mission section fix — removes inherited 1.65
+    line-height which added invisible space above the visible cap-height */
+}
+
+.prayer p {
+  max-width: none; /* now spans the full standardized 120px margins, per client request */
+  margin: 0 auto 7.2px; /* reduced to 30% of the previous 24px, per client request */
+  color: #000000; /* solid black, per client request for all body copy —
+    was inheriting the section's brown-dark default */
+  font-size: 20px; /* corrected to match Mission's finalized spec (was still on old 19px) */
+  font-weight: 400; /* Montserrat Regular, matching Mission's finalized weight (was Medium) */
+  line-height: 34.53px; /* exact PSD leading, matching Mission */
+}
+
+.prayer p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Contact Section
+   ========================================================================== */
+
+.contact {
+  position: relative;
+  background-color: var(--color-gold);
+  padding: 51.29px 0 47.97px; /* bottom increased by 2rem (32px) from the
+    440px-target calculated value, per client request for more gold background
+    at the bottom of the section */
+  text-align: center;
+  overflow: hidden;
+}
+
+.contact::before {
+  content: "";
+  position: absolute;
+  left: 8px; /* exact PSD position — sits just inside the left edge, no bleed */
+  top: -92px; /* pushes the graphic upward into the preceding Prayer section by
+    92px — exact PSD proportion (15% of the logo's 612px height sits above
+    Contact's own background start, 85% within Contact) */
+  width: 613px; /* exact PSD size — was 460px, noticeably smaller than intended */
+  height: 612px;
+  background-image: url("../images/watermark-logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.contact .container {
+  position: relative;
+  z-index: 1;
+}
+
+.contact h2 {
+  color: var(--color-white);
+  font-size: 32.5px; /* confirmed via consistent PSD engine data across all section
+    headings — same 32.5pt Montserrat Medium spec as Mission's verified heading */
+  font-weight: 500; /* Montserrat Medium — was inheriting global h1-h4 default of 600 */
+  margin-top: 0.5rem; /* reduced from 1rem (moves the block up 0.5rem) to fine-tune
+    description field's bottom edge with the base of the "M" in the watermark
+    graphic below — the graphic itself stays put since it's positioned relative
+    to the preceding Prayer section, not Contact */
+  margin-bottom: var(--space-lg);
+  line-height: 1; /* matches Mission section fix — removes inherited 1.65
+    line-height which added invisible space above the visible cap-height */
+}
+
+.contact-form {
+  width: 856px; /* exact PSD width, symmetrically centered with 222px margins */
+  margin: 0 auto;
+  text-align: left;
+}
+
+.contact-form-row {
+  display: flex;
+  gap: 23px; /* exact PSD gap between the two fields in each row */
+  margin-bottom: 11px; /* exact PSD gap between rows */
+}
+
+.contact-form-row:first-of-type {
+  margin-top: 0.5rem; /* shifts just the field rows (and description field,
+    which follows them) down, without moving the headline or Send link */
+}
+
+.contact-field {
+  width: 416px; /* exact PSD field width */
+  flex-shrink: 0;
+}
+
+.contact-field-full {
+  width: 856px; /* full form width */
+  margin-top: 1px; /* 12px PSD gap minus the 11px already applied by the row above */
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  height: 41px; /* exact PSD row height */
+  padding: 0 17px; /* exact PSD label inset from the field's left edge */
+  border: none;
+  border-radius: 0; /* square corners, matching the PSD's simple field boxes */
+  font-family: var(--font-body);
+  font-size: 16.25px; /* exact PSD label size: 16pt corrected */
+  background-color: var(--color-white);
+  color: var(--color-text);
+  box-sizing: border-box;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #BAB4AD; /* exact PSD label color */
+  opacity: 1;
+}
+
+.contact-form textarea {
+  height: 121px; /* exact PSD description field height */
+  padding-top: 15px; /* vertical breathing room for the placeholder text at the top */
+  resize: vertical;
+}
+
+.send-now-link {
+  display: block; /* was inline-block — needed for margin:auto centering below */
+  width: fit-content;
+  margin: 33.58px auto 0; /* reduced 30% from the previous 47.97px (which matched
+    the section's bottom padding for exact centering) — per client request,
+    this now sits closer to the description field than to the section's bottom edge */
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 1.12rem; /* reduced 30% from 1.6rem, per client request */
+  font-weight: 600;
+  color: var(--color-white); /* changed from the standard link blue — off-brand
+    for this site, per client request */
+  cursor: pointer;
+}
+
+.send-now-link::after {
+  content: " >>"; /* per client request — matches the arrow treatment used
+    on the sermon links */
+}
+
+.send-now-link:hover {
+  color: var(--color-brown-dark);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.site-footer {
+  background-color: var(--color-white);
+  padding: 15.38px 0 52px; /* bottom increased 30% from var(--space-lg)=40px, per client request */
+  text-align: center;
+}
+
+.footer-inner {
+  width: 1300px; /* identical to .header-inner — matches PSD design width exactly */
+  margin: 0 auto 14px; /* bottom margin reduced another 30% from 20px (original
+    50% reduction from var(--space-lg)=40px), per client request */
+  display: flex;
+  align-items: flex-start; /* identical to header — precise top-alignment for
+    the same nav-to-logo cap-height relationship */
+  justify-content: center;
+  column-gap: 100px; /* identical to header — exact PSD gap flanking the logo */
+  padding: 29.5px 120px; /* identical to header's exact PSD side margins and
+    vertical padding */
+}
+
+.footer-legal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0; /* spacing now comes entirely from the bullet separator's own
+    margins below, for clean symmetric spacing on both sides */
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.footer-legal a:first-child::after {
+  content: "\2022"; /* single bullet (•) separator, same size/font as the
+    links themselves since no separate styling is applied */
+  margin: 0 0.4em;
+  color: var(--color-text-muted);
+}
+
+.footer-legal a {
+  font-size: 0.825rem; /* increased 10% per client request */
+  font-weight: 400; /* explicit Regular, matching the site's confirmed body copy standard */
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.footer-address {
+  font-size: 0.935rem; /* increased 10% per client request */
+  font-weight: 400; /* explicit Regular, matching the site's confirmed body copy standard */
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-xs);
+}
+
+.footer-tagline {
+  font-size: 0.935rem; /* increased 10% per client request */
+  font-weight: 400; /* explicit Regular, matching the site's confirmed body copy standard */
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-md);
+}
+
+.footer-copyright {
+  display: block; /* moves the copyright onto its own line below "Serving
+    local churches...", per client request — previously only had this
+    treatment on mobile */
+  font-size: 0.7013rem; /* reduced 25% from the inherited 0.935rem, per client request */
+}
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--color-gold);
+  color: var(--color-white);
+}
+
+.footer-social a:hover {
+  background-color: var(--color-gold-dark);
+  text-decoration: none;
+}
+
+.footer-social svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* ==========================================================================
+   Header responsive behavior
+   The header fluidly scales — nav font-size, logo size, gaps, and padding
+   all shrink together proportionally (via clamp()) as the viewport narrows,
+   preserving the PSD's exact ratios at every size rather than distorting.
+   Values are capped at the exact PSD pixel specs at 1300px+ (full desktop
+   fidelity) and floored at the smallest size that stays legible/usable —
+   which works out to almost exactly the smallest iPad's width (744px).
+   Below that floor, at 768px, the nav switches cleanly to the mobile
+   hamburger menu, since fluid scaling can't go any smaller without
+   becoming illegible.
+   ========================================================================== */
+
+@media (max-width: 743px) {
+  /* Official cutoff: 743px and below is mobile — matches the smallest current
+     tablet (iPad mini, 744px), so no real tablet triggers this layout, only
+     phones. Everything above 743px is fully static/fixed, matching the PSD
+     pixel-for-pixel with zero scaling (or scaled via JS above 744px).
+
+     METHODOLOGY: these base rules are tuned for the NARROWEST real-world
+     width we're supporting (360px) — the hardest version of every layout
+     problem. A separate min-width block below adds breathing room as space
+     opens up toward 743px, rather than the other way around. This whole
+     block intentionally overrides the desktop's fixed-pixel values with
+     fluid/relative ones, since a single fixed scale factor (like the
+     desktop's PDF-style transform) would make text grow uncomfortably large
+     across this wide a mobile range (360px to 743px is a 2x+ span). */
+
+  /* ===== Scaling system reset ===== */
+  #scale-inner {
+    position: static;
+    left: auto;
+    width: 100%;
+  }
+
+  #scale-outer {
+    height: auto !important;
+  }
+
+  .container {
+    width: 100%;
+    padding: 0 var(--space-md);
+  }
+
+  section {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+
+  /* ===== Header / Navigation ===== */
+  .site-header .primary-nav {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .header-inner {
+    width: 100%;
+    position: relative; /* positioning context for the absolutely-placed hamburger below */
+    display: block; /* switched from flex — lets the logo center independently
+      via text-align, unaffected by the hamburger's presence */
+    text-align: center;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .logo {
+    display: inline-block; /* centers naturally via header-inner's text-align:center */
+  }
+
+  .site-header .hamburger {
+    position: absolute; /* scoped specifically to the header — the footer's
+      hamburger needs normal flex-flow positioning instead, to stack below
+      the logo rather than floating flush-right */
+    right: var(--space-md); /* flush with the page's own side padding */
+    bottom: var(--space-sm); /* matches header-inner's own bottom padding —
+      the logo's bottom edge references this same boundary, so both align */
+  }
+
+  .logo img {
+    width: 60px; /* scaled down from the desktop's 90px */
+    height: 81px;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1300 / 618;
+  }
+
+  .hero-tagline {
+    top: 4.85%;
+    font-size: 2.766vw; /* sized to exactly fill the page's padding width in one
+      line (calculated from the actual font metrics of this specific text at
+      its 0.05em letter-spacing) — this text is quite long, so the resulting
+      size is genuinely small; let me know if two lines at a larger size per
+      line would read better than one long thin line */
+  }
+
+  .hero-title {
+    font-size: 16.882vw; /* sized to exactly fill the page's padding width,
+      calculated from "Acts 20:24"'s actual rendered width at its specific
+      letter-spacing/word-spacing/kerning adjustments */
+    padding: 0 var(--space-md);
+    transform: translateX(-50%) translateY(2.566vw); /* recalculated to match
+      the new font-size, preserving the same 15.2%-of-font-size descender ratio */
+  }
+
+  /* ===== Scripture / Quote banner ===== */
+  .quote-banner {
+    width: 100%;
+    height: auto;
+    padding: 20px var(--space-md); /* top reduced 50% from var(--space-lg)=40px,
+      then applied equally to bottom too, per client request */
+  }
+
+  .quote-banner blockquote {
+    font-size: 4.5vw;
+    line-height: 1.3;
+  }
+
+  .quote-banner cite {
+    font-size: 3.2vw;
+  }
+
+  /* Photo bar removed entirely below tablet size — a full row of 6
+     stacked images reads as cluttered on a phone screen. */
+  .photo-strip {
+    display: none;
+  }
+
+  /* ===== Mission ===== */
+  .mission {
+    width: 100%;
+    padding: 25.6px var(--space-md) 28.16px; /* top: 60% reduction from
+      var(--space-xl)=64px. Bottom: that same value increased 10%, per client request */
+  }
+
+  .mission h2 {
+    font-size: clamp(25.2px, 7vw, 32px);
+  }
+
+  .mission p,
+  .mission p.emphasis {
+    font-size: clamp(15.12px, 4.2vw, 18px);
+    line-height: 1.5;
+  }
+
+  /* ===== Areas of Service ===== */
+  .services {
+    padding: 25.6px 0 28.16px; /* horizontal component removed — was creating
+      a double-padding bug (48px total) since .services-list is inside a
+      .container div that already applies var(--space-md) on its own,
+      matching Bio section's correct pattern */
+  }
+
+  .services h2 {
+    font-size: clamp(25.2px, 7vw, 32px);
+  }
+
+  .services-intro {
+    font-size: clamp(15.12px, 4.2vw, 18px);
+    line-height: 1.5;
+    margin-bottom: 19.14px; /* reduced 20% from the inherited desktop value
+      (23.92px, which was font-metric corrected for a completely different
+      desktop context and doesn't really apply on mobile) — now an explicit
+      mobile-specific value, per client request */
+  }
+
+  .service-list {
+    padding: 0; /* remove the desktop's added indent — full width on mobile */
+    gap: 20px; /* reverted back to the original desktop-inherited value —
+      the previous 12px closed up too much, per client feedback */
+  }
+
+  .service-item {
+    grid-template-columns: 1fr; /* stack image above text */
+    gap: 20px; /* matched up to the 20px between-item spacing, per client
+      request, rather than shrinking both down to 12px */
+    text-align: center; /* was left, per client request — doesn't work well
+      now that the image centers above the text instead of sitting beside it */
+  }
+
+  .service-item img {
+    width: 165px; /* fixed at the true native image resolution, not a fluid
+      percentage — the previous width:100% stretched these to 312px even at
+      the narrowest 360px viewport, a 1.89x upscale beyond their actual
+      165x165 source resolution, causing visible blur/pixelation. Locking to
+      native size eliminates upscaling entirely across the whole 360-743px
+      range, and also shortens each listing since the image no longer scales
+      up with viewport width, per client request */
+    height: 165px;
+    margin: 0 auto; /* centers above the listing instead of stretching edge to edge */
+    display: block;
+  }
+
+  .service-item h3 {
+    margin-top: 0; /* removed — this was stacking on top of .service-item's own
+      20px grid gap (image to text block), creating 32px total instead of the
+      intended 20px. This margin was a leftover from before the image centered
+      above the text; the grid gap alone now provides the correct spacing */
+    font-size: clamp(15.12px, 4.2vw, 18px); /* matched to the section intro's size, per client request —
+      was inheriting the desktop's fixed 1.15rem, inappropriate for mobile */
+  }
+
+  .service-item p {
+    font-size: clamp(15.12px, 4.2vw, 18px); /* matched to the section intro's size, per client request —
+      was inheriting the desktop's fixed 20px with no mobile override at all */
+    line-height: 1.5;
+  }
+
+  .bio::before,
+  .prayer::after {
+    display: none; /* decorative straddling watermarks removed on mobile —
+      they're positioned for a fixed desktop layout and can't survive
+      independently-reflowing sections at this width */
+  }
+
+  /* ===== Bio ===== */
+  .bio {
+    padding: 37.5px 0; /* top reduced 50% from the inherited desktop value
+      (75px), then applied equally to bottom too, per client request —
+      this section had no mobile-specific padding override before now,
+      so it was inheriting the desktop's 75px/98.86px values directly */
+  }
+
+  .bio .container {
+    padding: 0 var(--space-md); /* remove the desktop's 200px indent override */
+  }
+
+  .bio-photo {
+    width: 140px;
+    height: 140px;
+  }
+
+  .bio h2 {
+    font-size: clamp(25.2px, 7vw, 32px);
+  }
+
+  .bio-intro,
+  .bio-block p {
+    font-size: clamp(15.12px, 4.2vw, 18px);
+    line-height: 1.5;
+  }
+
+  /* ===== Sermons ===== */
+  .sermons {
+    padding: 25.6px 0 44.16px; /* bottom increased 1rem (16px) beyond the
+      28.16px fix, per client request for more space below the button.
+      Horizontal component removed — was creating a double-padding bug
+      (48px total), matching the fix applied to Areas of Service and
+      Bio's correct pattern */
+  }
+
+  .sermons h1,
+  .sermons h2 {
+    font-size: clamp(25.2px, 7vw, 32px);
+  }
+
+  .sermons-intro {
+    width: 100%; /* explicit — ensures it spans the full padding width */
+    max-width: none;
+    text-align: center;
+    font-size: clamp(15.12px, 4.2vw, 18px);
+    line-height: 1.5;
+    margin-bottom: var(--space-md); /* now matches the standard 24px space
+      used above/below every gold separator line, so the gap before the
+      first line is consistent with all the others, per client request */
+  }
+
+  .sermon-item {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    text-align: center; /* was left, per client request */
+    border-top: 1px solid var(--color-gold); /* thin separator line — since
+      this applies to every listing, the first item's border also serves as
+      the separator between the intro copy and the first listing, and each
+      subsequent item's border separates it from the one above */
+    padding-top: var(--space-md);
+  }
+
+  .sermon-list {
+    gap: var(--space-md); /* was inheriting the desktop's 44.8px — now matches
+      the 24px space below each separator line exactly, per client request */
+  }
+
+  .sermon-item img {
+    display: none; /* images eliminated for this view, per client request */
+  }
+
+  .sermon-item .link-underline {
+    display: block; /* forces the "Watch this Sermon Now >>" link onto its own
+      line unconditionally on mobile, rather than only wrapping when it
+      doesn't fit on the same line as the last sentence */
+    margin-top: var(--space-xs);
+  }
+
+  .sermons .section-cta {
+    margin-top: 26.88px; /* reduced 40% from the inherited desktop value
+      (44.8px), per client request — scoped to Sermons specifically since
+      this class is shared with Resources' own button */
+  }
+
+  .sermon-item .sermon-meta {
+    font-size: 3.498vw; /* recalculated: was based on the correct 312px target
+      width, but the double-padding bug just fixed above meant the ACTUAL
+      available space was only 264px, causing this to wrap to two lines.
+      Also removed letter-spacing entirely, per client request — both changes
+      combined let this render larger while still fitting one line */
+    letter-spacing: 0; /* eliminated per client request, was 0.04em (inherited
+      from the desktop rule) */
+    margin-top: 0; /* no image above it anymore to space away from */
+  }
+
+  .sermon-item h3 {
+    font-size: clamp(15.12px, 4.2vw, 18px); /* matched to the section intro's size, per client request */
+    font-weight: 500; /* Montserrat Medium — matched to the section headline's
+      weight, per client request */
+    margin-top: 0.75rem; /* matches Areas of Service's image-to-headline
+      spacing — now the gap from the eyebrow header instead, since there's
+      no image in this view */
+  }
+
+  .sermon-item .sermon-scripture {
+    font-size: clamp(13px, 3.6vw, 15px);
+  }
+
+  .sermon-item p {
+    font-size: clamp(15.12px, 4.2vw, 18px); /* matched to the section intro's size, per client request */
+    line-height: 1.5;
+  }
+
+  /* ===== Resources ===== */
+  .resources {
+    padding: 25.6px 0 44.16px; /* matched to Sermons section's exact
+      top/bottom padding, per client request */
+  }
+
+  .resources h1,
+  .resources h2 {
+    font-size: clamp(25.2px, 7vw, 32px);
+  }
+
+  .resource-item {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    text-align: center; /* was left, per client request */
+    border-top: 1px solid var(--color-white); /* changed from gold — wasn't
+      visible enough against the taupe-light background, per client request */
+    padding-top: var(--space-md);
+  }
+
+  .resource-item:first-child {
+    border-top: none; /* removes the line between the section headline and
+      the first listing — it should only appear between listings, per
+      client request */
+    padding-top: 0;
+  }
+
+  .resource-list {
+    gap: var(--space-md); /* matches the space below each separator line,
+      same consistent-spacing approach used in Sermons */
+  }
+
+  .resource-item img.resource-item-square {
+    display: none; /* placeholder image for The Marrow Minute removed
+      entirely, per client request */
+  }
+
+  .resource-item img.resource-item-book {
+    width: 140px; /* the real book cover stays visible — fixed-width class
+      from desktop needs an explicit mobile override here, since a generic
+      width:100% wouldn't beat its specificity */
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .resource-item h3 {
+    font-size: 4.62vw; /* increased 10% from the standard 4.2vw, per client
+      request — applies to both listings automatically since this is a
+      shared class */
+    line-height: 1.3; /* was inheriting the desktop's fixed 28px line-height,
+      calculated for a much larger desktop font-size — at mobile's smaller
+      size that created the oversized "double spacing" appearance */
+    margin-top: var(--space-sm);
+  }
+
+  .resource-item .resource-author {
+    font-size: 3.78vw; /* reduced 10% from the standard 4.2vw, per client
+      request — applies to both listings automatically */
+  }
+
+  .resource-item p {
+    font-size: clamp(15.12px, 4.2vw, 18px); /* matched to the site's standard mobile body copy size */
+    line-height: 1.5; /* was inheriting the desktop's fixed 34.53px line-height,
+      calculated for a much larger desktop font-size — at mobile's smaller
+      size that was nearly 2.3x the font-size, the exact "double spacing" bug */
+    font-weight: 400; /* Regular — was inheriting the desktop's Medium (500),
+      reading too bold on mobile, per client request */
+  }
+
+  .resources .section-cta {
+    margin-top: 26.88px; /* matches the exact space-above-button value used
+      in Sermons, per client request */
+  }
+
+  /* ===== Prayer ===== */
+  .prayer {
+    padding: 25.6px 0 30.912px; /* bottom reduced 30% from the 44.16px matched
+      to Sermons, per client request */
+  }
+
+  .prayer h2 {
+    font-size: clamp(25.2px, 7vw, 32px);
+  }
+
+  .prayer p {
+    font-size: clamp(15.12px, 4.2vw, 18px);
+    line-height: 1.5;
+  }
+
+  /* ===== Contact ===== */
+  .contact {
+    padding: 25.6px 0; /* bottom reduced to match top exactly, per client
+      request — was 44.16px matched to Sermons, now equal on both sides */
+  }
+
+  .contact h2 {
+    font-size: clamp(25.2px, 7vw, 32px);
+    margin-top: 0; /* the desktop's 0.5rem watermark-alignment shift isn't
+      relevant once the watermark is hidden on mobile */
+    margin-bottom: 20px; /* reduced 50% from the inherited desktop value
+      (var(--space-lg)=40px), per client request */
+  }
+
+  .contact .send-now-link {
+    margin-top: 16.79px; /* reduced 50% from the inherited desktop value
+      (33.58px), per client request — scoped to Contact since .send-now-link
+      is specific to this section already, but matching the site's pattern
+      of explicit scoping for clarity */
+  }
+
+  .contact-form {
+    width: 100%; /* override the fixed 856px desktop width */
+  }
+
+  .contact-form-row {
+    flex-direction: column; /* stack First/Last Name and Email/Phone instead
+      of sitting side by side in fixed 416px columns */
+    gap: var(--space-sm);
+  }
+
+  .contact-field {
+    width: 100%; /* override the fixed 416px desktop width */
+  }
+
+  .contact-field-full {
+    width: 100%; /* override the fixed 856px desktop width */
+  }
+
+  /* ===== Footer ===== */
+  .footer-copyright {
+    display: block; /* forces the copyright onto its own line — this is now
+      also true on desktop via the base rule above; kept here for the
+      mobile-specific font-size override below */
+    font-size: 0.561rem; /* reduced 40% from the inherited 0.935rem, per client request */
+    margin-top: var(--space-xs);
+  }
+
+  .footer-inner {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    flex-direction: column; /* stacks the logo and hamburger vertically,
+      per client request, instead of desktop's side-by-side row */
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+  }
+
+  .footer-hamburger {
+    position: static; /* normal flex-flow position — sits centered below
+      the logo as the next item in the column stack */
+  }
+
+  .footer-inner .primary-nav {
+    display: none; /* menu links removed entirely for this view, leaving just
+      the centered logo, per client request */
+  }
+
+  .site-footer {
+    padding-left: var(--space-md); /* was 0 on desktop (no mobile override
+      existed) — the legal links, address, tagline, and copyright had no
+      page-padding constraint at all before this, per client request */
+    padding-right: var(--space-md);
+  }
+}
+
