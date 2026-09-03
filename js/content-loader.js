@@ -56,6 +56,14 @@
       .join("");
   }
 
+  function formatDate(dateStr) {
+    if (!dateStr) return "";
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return "";
+    const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  }
+
   // ---------- Sermons ----------
   function renderSermonItem(sermon) {
     const scripture = sermon.scripture
@@ -66,15 +74,17 @@
           sermon.videoUrl
         )}" class="link-underline" target="_blank" rel="noopener noreferrer">Watch this Sermon Now</a>`
       : "";
+    const dateLabel = formatDate(sermon.date);
+    const metaLine = dateLabel
+      ? `${escapeHTML(sermon.church)} &middot; ${escapeHTML(sermon.location)} &middot; ${escapeHTML(dateLabel)}`
+      : `${escapeHTML(sermon.church)} &middot; ${escapeHTML(sermon.location)}`;
     return `
       <article class="sermon-item">
         <img src="${escapeHTML(sermon.image)}" alt="${escapeHTML(
       sermon.title
     )}" width="165" height="165">
         <div>
-          <p class="sermon-meta">${escapeHTML(sermon.church)} &middot; ${escapeHTML(
-      sermon.location
-    )}</p>
+          <p class="sermon-meta">${metaLine}</p>
           <h3>${escapeHTML(sermon.title)}</h3>
           ${scripture}
           <p>${escapeHTML(sermon.description)}${link}</p>
